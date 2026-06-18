@@ -1,11 +1,10 @@
 package com.ticl.auth.controller;
 
-import com.ticl.auth.dto.ApiResponse;
 import com.ticl.auth.dto.LoginRequest;
 import com.ticl.auth.dto.LoginResponse;
 import com.ticl.auth.service.AuthService;
+import com.ticl.commons.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

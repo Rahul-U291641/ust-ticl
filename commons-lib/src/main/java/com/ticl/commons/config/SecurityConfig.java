@@ -1,11 +1,12 @@
-package com.ticl.auth.config;
+package com.ticl.commons.config;
 
-import com.ticl.auth.entity.Role;
-import com.ticl.auth.entity.User;
-import com.ticl.auth.exception.customExceptions.CustomAccessDeniedHandler;
-import com.ticl.auth.repository.UserRepository;
-import com.ticl.auth.security.JwtFilter;
-import com.ticl.auth.security.UserDetailsServiceImpl;
+import com.ticl.commons.entity.User;
+import com.ticl.commons.enums.Role;
+import com.ticl.commons.exception.customExceptions.CustomAccessDeniedHandler;
+import com.ticl.commons.repository.UserRepository;
+import com.ticl.commons.security.JwtFilter;
+import com.ticl.commons.security.SecurityProperties;
+import com.ticl.commons.security.UserDetailsServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -38,6 +39,9 @@ public class SecurityConfig {
     @Autowired
     CustomAccessDeniedHandler accessDeniedHandler;
 
+    @Autowired
+    SecurityProperties securityProperties;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -69,9 +73,9 @@ public class SecurityConfig {
                                 SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/auth/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**")
+                                securityProperties.getPublicUrls()
+                                        .toArray(new String[0])
+                        )
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -108,8 +112,8 @@ public class SecurityConfig {
                     .password(passwordEncoder.encode("Admin@123"))
                     .role(Role.ADMIN)
                     .status("ACTIVE")
-                    .created_at(now)
-                    .updated_at(now)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
                     .build();
 
             User manager = User.builder()
@@ -117,8 +121,8 @@ public class SecurityConfig {
                     .password(passwordEncoder.encode("Manager@123"))
                     .role(Role.INVENTORY_MANAGER)
                     .status("ACTIVE")
-                    .created_at(now)
-                    .updated_at(now)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
                     .build();
 
             User viewer = User.builder()
@@ -126,15 +130,15 @@ public class SecurityConfig {
                     .password(passwordEncoder.encode("Viewer@123"))
                     .role(Role.VIEWER)
                     .status("ACTIVE")
-                    .created_at(now)
-                    .updated_at(now)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
                     .build();
 
             userRepository.save(admin);
             userRepository.save(manager);
             userRepository.save(viewer);
 
-           log.info("All Default users created successfully.");
+            log.info("All Default users created successfully.");
         };
     }
 }

@@ -1,4 +1,4 @@
-package com.ticl.auth.config;
+package com.ticl.commons.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

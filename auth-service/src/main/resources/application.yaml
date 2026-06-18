@@ -25,3 +25,10 @@ server:
 jwt:
   secret: mySuperSecretKeymySuperSecretKeymySuperSecretKey
   expiration: 3600000
+
+# Public URLs
+security:
+  public-urls:
+    - /auth/**
+    - /swagger-ui/**
+    - /v3/api-docs/**

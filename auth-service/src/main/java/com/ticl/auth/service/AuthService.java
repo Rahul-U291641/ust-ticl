@@ -1,16 +1,15 @@
 package com.ticl.auth.service;
 
-import com.ticl.auth.dto.ApiResponse;
 import com.ticl.auth.dto.LoginRequest;
 import com.ticl.auth.dto.LoginResponse;
 import com.ticl.auth.dto.UserInfoResponse;
-import com.ticl.auth.entity.BlacklistedToken;
-import com.ticl.auth.entity.User;
-import com.ticl.auth.exception.customExceptions.UsernameNotFoundException;
-import com.ticl.auth.repository.BlacklistedTokenRepository;
-import com.ticl.auth.repository.UserRepository;
-import com.ticl.auth.security.JwtUtils;
-import org.jspecify.annotations.Nullable;
+import com.ticl.commons.dto.ApiResponse;
+import com.ticl.commons.entity.BlacklistedToken;
+import com.ticl.commons.entity.User;
+import com.ticl.commons.exception.customExceptions.UsernameNotFoundException;
+import com.ticl.commons.repository.BlacklistedTokenRepository;
+import com.ticl.commons.repository.UserRepository;
+import com.ticl.commons.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -84,6 +83,7 @@ public class AuthService {
                                         ZoneId.systemDefault())
                                 .toLocalDateTime())
                 .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
 
         blacklistedTokenRepository.save(blacklistedToken);
