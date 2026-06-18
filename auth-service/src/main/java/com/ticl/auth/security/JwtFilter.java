@@ -1,5 +1,6 @@
 package com.ticl.auth.security;
 
+import com.ticl.auth.repository.BlacklistedTokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    BlacklistedTokenRepository blacklistedTokenRepository;
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -37,6 +41,19 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
+
+        // Checking token is blacklisted or not before validating it
+        if (blacklistedTokenRepository.existsByToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("""
+            {
+              "status":401,
+              "message":"User may logged out or Token has been revoked/blacklisted"
+            }
+            """);
+            return;
+        }
 
         String username = jwtUtils.extractUsername(token);
 

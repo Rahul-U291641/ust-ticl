@@ -1,6 +1,7 @@
 package com.ticl.auth.exception;
 
 import com.ticl.auth.dto.ErrorResponse;
+import com.ticl.auth.exception.customExceptions.CustomAccessDeniedHandler;
 import com.ticl.auth.exception.customExceptions.UsernameNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

@@ -41,4 +41,16 @@ public class JwtUtils {
                 .getPayload()
                 .getSubject();
     }
+
+    public Date extractExpiration(String token) {
+
+        return Jwts.parser()
+                .verifyWith(
+                        Keys.hmacShaKeyFor(SECRET.getBytes())
+                )
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
+    }
 }

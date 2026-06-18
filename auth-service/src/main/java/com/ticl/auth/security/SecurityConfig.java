@@ -2,6 +2,7 @@ package com.ticl.auth.security;
 
 import com.ticl.auth.entity.Role;
 import com.ticl.auth.entity.User;
+import com.ticl.auth.exception.customExceptions.CustomAccessDeniedHandler;
 import com.ticl.auth.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,10 +27,14 @@ import java.time.LocalDateTime;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @Log4j2
 public class SecurityConfig {
     @Autowired
     JwtFilter jwtFilter;
+
+    @Autowired
+    CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -68,6 +74,9 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated())
                 .authenticationProvider(authenticationProvider)
+                .exceptionHandling(
+                        exception -> exception.accessDeniedHandler(accessDeniedHandler)
+                )
                 .addFilterBefore(
                         jwtFilter,
                         UsernamePasswordAuthenticationFilter.class);
