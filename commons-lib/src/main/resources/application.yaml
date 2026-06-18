@@ -1,13 +1,11 @@
-# Spring [Application/Datasource] configurations
 spring:
   application:
-    name: auth-service
+    name: commons-lib
   datasource:
     url: jdbc:postgresql://localhost:5432/inventory-mgmt
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update   # create, create-drop, validate, none
@@ -15,14 +13,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
   sql:
     init:
       mode: always
-# Server Configurations
-server:
-  port: 8081
-
 # JWT Configurations
 jwt:
   secret: mySuperSecretKeymySuperSecretKeymySuperSecretKey

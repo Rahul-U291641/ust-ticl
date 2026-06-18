@@ -1,9 +1,11 @@
-package com.ticl.auth.security;
+package com.ticl.auth.config;
 
 import com.ticl.auth.entity.Role;
 import com.ticl.auth.entity.User;
 import com.ticl.auth.exception.customExceptions.CustomAccessDeniedHandler;
 import com.ticl.auth.repository.UserRepository;
+import com.ticl.auth.security.JwtFilter;
+import com.ticl.auth.security.UserDetailsServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

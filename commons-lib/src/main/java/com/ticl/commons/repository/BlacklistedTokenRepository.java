@@ -1,6 +1,6 @@
-package com.ticl.auth.repository;
+package com.ticl.commons.repository;
 
-import com.ticl.auth.entity.BlacklistedToken;
+import com.ticl.commons.entity.BlacklistedToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
