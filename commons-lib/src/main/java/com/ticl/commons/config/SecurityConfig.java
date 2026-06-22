@@ -66,7 +66,7 @@ public class SecurityConfig {
             HttpSecurity http,
             AuthenticationProvider authenticationProvider)
             throws Exception {
-
+        log.info("Started securityFilterChain validation!");
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
@@ -86,7 +86,7 @@ public class SecurityConfig {
                 .addFilterBefore(
                         jwtFilter,
                         UsernamePasswordAuthenticationFilter.class);
-
+        log.info("Validate securityFilterChain!");
         return http.build();
     }
 
