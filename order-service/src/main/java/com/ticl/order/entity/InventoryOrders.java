@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -30,4 +31,6 @@ public class InventoryOrders extends BaseEntity {
     private String status;
     @Column(name = "expected_delivery_date")
     private LocalDate expectedDeliveryDate;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItems> orderItems;
 }

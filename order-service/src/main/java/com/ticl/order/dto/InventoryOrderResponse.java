@@ -19,6 +19,7 @@ public class InventoryOrderResponse {
     private double totalAmount;
     private String status;
     private LocalDate expectedDeliveryDate;
+    private OrderItemResponse orderItems;
     private LocalDate createdAt;
     private LocalDate updatedAt;
 }
