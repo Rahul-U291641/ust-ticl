@@ -14,12 +14,17 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class OrderItems  extends BaseEntity  {
+public class OrderItems extends BaseEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID order_item_id;
-    private UUID order_id;
-    private UUID item_id;
+    @Column(name = "order_item_id")
+    private UUID orderItemId;
+    @Column(name = "order_id")
+    private UUID orderId;
+    @Column(name = "item_id")
+    private UUID itemId;
+    @Column(name = "quantity" )
     private int quantity;
-    private double unit_price;
+    @Column(name = "unit_price")
+    private double unitPrice;
 }

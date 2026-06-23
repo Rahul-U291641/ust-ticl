@@ -18,10 +18,16 @@ import java.util.UUID;
 public class InventoryOrders extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID order_id;
-    private String supplier_name;
-    private LocalDate order_date;
-    private double total_amount;
+    @Column(name = "order_id")
+    private UUID orderId;
+    @Column(name = "supplier_name")
+    private String supplierName;
+    @Column(name = "order_date")
+    private LocalDate orderDate;
+    @Column(name = "total_amount")
+    private double totalAmount;
+    @Column(name = "status")
     private String status;
-    private LocalDate expected_delivery_date;
+    @Column(name = "expected_delivery_date")
+    private LocalDate expectedDeliveryDate;
 }

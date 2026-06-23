@@ -21,7 +21,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-
         response.getWriter().write("""
                 {
                   "status": 401,
