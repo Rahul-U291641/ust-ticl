@@ -61,6 +61,6 @@ public class InventoryController {
     @PreAuthorize("hasAnyRole('ADMIN','INVENTORY_MANAGER')")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         service.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Inventory item deleted successfully!");
+        return ResponseEntity.ok("Inventory item deleted successfully!");
     }
 }
