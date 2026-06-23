@@ -1,7 +1,11 @@
-# Spring [Application/Datasource] configurations
+# Server Configurations
+server:
+  port: 8082
+
+# Spring and kafka configurations
 spring:
   application:
-    name: auth-service
+    name: inventory-service
   datasource:
     url: jdbc:postgresql://localhost:5432/inventory-mgmt
     username: postgres
@@ -17,9 +21,14 @@ spring:
   sql:
     init:
       mode: always
-# Server Configurations
-server:
-  port: 8081
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+app:
+  kafka:
+    inventory-topic: inventory-events
 
 # JWT Configurations
 jwt:
@@ -29,6 +38,5 @@ jwt:
 # Public URLs
 security:
   public-urls:
-    - /auth/**
     - /swagger-ui/**
     - /v3/api-docs/**

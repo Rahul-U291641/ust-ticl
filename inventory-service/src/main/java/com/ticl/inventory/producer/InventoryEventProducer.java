@@ -19,17 +19,17 @@ public class InventoryEventProducer {
 
         InventoryEvent event =
                 InventoryEvent.builder()
-                        .itemId(item.getItem_id())
-                        .itemName(item.getItem_name())
+                        .itemId(item.getItemId())
+                        .itemName(item.getItemName())
                         .quantity(item.getQuantity())
-                        .reorderThreshold(item.getReorder_threshold())
+                        .reorderThreshold(item.getReorderThreshold())
                         .eventType(eventType.name())
                         .eventTime(LocalDateTime.now())
                         .build();
 
         kafkaTemplate.send(
                 "inventory-events",
-                item.getItem_id().toString(),
+                item.getItemId().toString(),
                 event);
     }
 }

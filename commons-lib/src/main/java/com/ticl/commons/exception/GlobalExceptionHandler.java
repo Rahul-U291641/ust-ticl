@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error("Internal Server Error! Please wait for sometime or connect with support.")
+                .error("Internal Server Error!")
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();

@@ -12,7 +12,10 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "inventory_items")
+@Table(name = "inventory_items",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"item_name", "supplier"}, name = "uk_inventory_composite")
+})
 @SuperBuilder
 @Getter
 @Setter
@@ -21,10 +24,16 @@ import java.util.UUID;
 public class InventoryItem extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID item_id;
-    private String item_name;
+    @Column(name = "item_id")
+    private UUID itemId;
+    @Column(name = "item_name")
+    private String itemName;
+    @Column(name = "supplier")
     private String supplier;
+    @Column(name = "quantity")
     private int quantity;
-    private BigDecimal unit_price;
-    private int reorder_threshold;
+    @Column(name = "unit_price")
+    private BigDecimal unitPrice;
+    @Column(name = "reorder_threshold")
+    private int reorderThreshold;
 }

@@ -10,6 +10,7 @@ import com.ticl.inventory.repository.InventoryRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,16 +25,14 @@ public class InventoryService {
     private final InventoryRepository repository;
     private final InventoryEventProducer producer;
 
-    @Transactional(readOnly = true)
     public InventoryResponse create(InventoryRequest request) {
-
         try {
             InventoryItem item = InventoryItem.builder()
-                    .item_name(request.getItemName())
+                    .itemName(request.getItemName())
                     .supplier(request.getSupplier())
                     .quantity(request.getQuantity())
-                    .unit_price(request.getUnitPrice())
-                    .reorder_threshold(request.getReorderThreshold())
+                    .unitPrice(request.getUnitPrice())
+                    .reorderThreshold(request.getReorderThreshold())
                     .createdAt(LocalDateTime.now())
                     .build();
 
@@ -41,6 +40,8 @@ public class InventoryService {
             //FIXME:: producer.publishInventoryEvent(item, EventType.INVENTORY_CREATED);
 
             return mapToResponse(item);
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException("Item already present with the combination of item_id, item_name, and supplier.");
         } catch (Exception e) {
             throw new BusinessException("Unable to create a Inventory item due to : " + e.getMessage());
         }
@@ -54,18 +55,17 @@ public class InventoryService {
 
     private InventoryResponse mapToResponse(InventoryItem item) {
         return InventoryResponse.builder()
-                .itemId(item.getItem_id())
-                .itemName(item.getItem_name())
+                .itemId(item.getItemId())
+                .itemName(item.getItemName())
                 .supplier(item.getSupplier())
                 .quantity(item.getQuantity())
-                .unitPrice(item.getUnit_price())
-                .reorderThreshold(item.getReorder_threshold())
+                .unitPrice(item.getUnitPrice())
+                .reorderThreshold(item.getReorderThreshold())
                 .build();
     }
 
     public InventoryResponse getById(UUID id) {
         InventoryItem inventoryItem = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Inventory item not found for requested ID : " + id));
-
         return mapToResponse(inventoryItem);
     }
 
@@ -73,12 +73,12 @@ public class InventoryService {
         try {
             InventoryItem inventoryItem = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The item not found for requested ID : " + id));
 
-            inventoryItem.setItem_name(request.getItemName());
-            inventoryItem.setItem_id(id);
+            inventoryItem.setItemName(request.getItemName());
+            inventoryItem.setItemId(id);
             inventoryItem.setQuantity(request.getQuantity());
             inventoryItem.setSupplier(request.getSupplier());
-            inventoryItem.setUnit_price(request.getUnitPrice());
-            inventoryItem.setReorder_threshold(request.getReorderThreshold());
+            inventoryItem.setUnitPrice(request.getUnitPrice());
+            inventoryItem.setReorderThreshold(request.getReorderThreshold());
             inventoryItem.setUpdatedAt(LocalDateTime.now());
 
             repository.save(inventoryItem);
