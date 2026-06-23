@@ -35,6 +35,17 @@ jwt:
   secret: mySuperSecretKeymySuperSecretKeymySuperSecretKey
   expiration: 3600000
 
+# Swagger/OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs                           # Path to machine-readable API spec
+  swagger-ui:
+    path: /swagger-ui.html                       # Path to interactive Swagger UI
+    enabled: true                                # Enable Swagger UI
+    operations-sorter: method                    # Sort endpoints by HTTP method
+    tags-sorter: alpha                           # Sort tags alphabetically
+    show-common-extensions: true                 # Show common extensions
+
 # Public URLs
 security:
   public-urls:
