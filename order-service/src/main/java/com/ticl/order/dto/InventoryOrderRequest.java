@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,4 +18,5 @@ public class InventoryOrderRequest {
     private double totalAmount;
     private String status;
     private LocalDate expectedDeliveryDate;
+    private List<OrderItemRequest> orderItems;
 }
