@@ -4,6 +4,7 @@ import com.ticl.commons.exception.customExceptions.BusinessException;
 import com.ticl.commons.exception.customExceptions.*;
 import com.ticl.order.dto.InventoryOrderRequest;
 import com.ticl.order.dto.InventoryOrderResponse;
+import com.ticl.order.dto.OrderItemRequest;
 import com.ticl.order.dto.OrderItemResponse;
 import com.ticl.order.entity.InventoryOrders;
 import com.ticl.order.entity.OrderItems;
@@ -57,7 +58,7 @@ public class OrderService {
 
             if (request.getOrderItems() != null && !request.getOrderItems().isEmpty()) {
                 List<OrderItems> items = new ArrayList<>();
-                for (var itemRequest : request.getOrderItems()) {
+                for (OrderItemRequest itemRequest : request.getOrderItems()) {
                     if (itemRequest == null) {
                         throw new BusinessException("Order item cannot be null");
                     }
@@ -194,7 +195,6 @@ public class OrderService {
                     : null;
 
             return InventoryOrderResponse.builder()
-                    .orderId(order.getOrderId())
                     .supplierName(order.getSupplierName())
                     .orderDate(order.getOrderDate())
                     .totalAmount(order.getTotalAmount())

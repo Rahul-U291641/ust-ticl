@@ -14,7 +14,6 @@ import java.util.UUID;
 @Builder
 public class OrderItemResponse {
     private UUID orderItemId;
-    private UUID orderId;
     private UUID itemId;
     private int quantity;
     private double unitPrice;

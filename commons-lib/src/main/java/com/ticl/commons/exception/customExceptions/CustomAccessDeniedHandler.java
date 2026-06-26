@@ -28,5 +28,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                   "message": "Authentication is required"
                 }
                 """);
+        log.error("Access Denied: {}", accessDeniedException.getMessage());
+        throw new AccessDeniedException("Access Denied!");
     }
 }

@@ -1,5 +1,6 @@
 package com.ticl.commons.security;
 
+import com.ticl.commons.exception.customExceptions.BusinessException;
 import com.ticl.commons.repository.BlacklistedTokenRepository;
 import com.ticl.commons.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.error("Skipped JWT verification as token is empty/not found!");
             filterChain.doFilter(request, response);
-            return;
+            throw new BusinessException("Authorization header is missing or invalid!");
         }
 
         String token = authHeader.substring(7);
@@ -59,7 +61,20 @@ public class JwtFilter extends OncePerRequestFilter {
               "message":"User may logged out or Token has been revoked/blacklisted"
             }
             """);
-            return;
+
+            throw new BusinessException("Token is blacklisted!");
+        } else if (!jwtUtils.isTokenValid(token)) {
+                log.error("JWT token is invalid!");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("""
+                {
+                  "status":401,
+                  "message":"Invalid or expired token!"
+                }
+                """);
+
+                throw new AccessDeniedException("Token is invalid or expired!");
         }
 
         String username = jwtUtils.extractUsername(token);

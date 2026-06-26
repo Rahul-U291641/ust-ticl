@@ -1,6 +1,7 @@
 package com.ticl.commons.utils;
 
 import com.ticl.commons.entity.User;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,5 +53,13 @@ public class JwtUtils {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getExpiration();
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            return !extractExpiration(token).before(new Date());
+        } catch (ExpiredJwtException e) {
+            return false;
+        }
     }
 }
