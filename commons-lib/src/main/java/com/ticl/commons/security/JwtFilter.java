@@ -81,9 +81,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             log.warn("Set security context holder!");
-
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
@@ -91,7 +89,6 @@ public class JwtFilter extends OncePerRequestFilter {
             );
 
             log.info("Authorities: {}", userDetails.getAuthorities());
-
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
         log.info("JWT Filter Executed");
