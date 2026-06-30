@@ -37,7 +37,7 @@ public class InventoryService {
                     .build();
 
             repository.save(item);
-            //FIXME:: producer.publishInventoryEvent(item, EventType.INVENTORY_CREATED);
+            producer.publishInventoryEvent(item, EventType.INVENTORY_CREATED);
 
             return mapToResponse(item);
         } catch (DataIntegrityViolationException e) {
