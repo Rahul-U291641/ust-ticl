@@ -66,13 +66,17 @@ public class JwtFilter extends OncePerRequestFilter {
                     new BusinessException("Token is blacklisted!")
             );
             return; // stop filter chain
-        } else if (!jwtUtils.isTokenValid(token)) {
-            log.error("JWT token is invalid!");
-            handlerExceptionResolver.resolveException(
-                    request, response, null,
-                    new CustomAccessDeniedException("Token is invalid or expired!")
-            );
-            return; // stop filter chain
+        } else {
+            try {
+                if (!jwtUtils.isTokenValid(token)) {
+                    log.error("JWT token is invalid!");
+                    this.handleAccessDeniedException(request, response, new AccessDeniedException("Token is not valid!"));
+                    return; // stop filter chain
+                }
+            } catch (Exception e) {
+                this.handleAccessDeniedException(request, response, new AccessDeniedException(e.getMessage()));
+                return;
+            }
         }
 
         String username = jwtUtils.extractUsername(token);
@@ -84,10 +88,10 @@ public class JwtFilter extends OncePerRequestFilter {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+            );
 
             log.info("Authorities: {}", userDetails.getAuthorities());
 
@@ -95,5 +99,16 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         log.info("JWT Filter Executed");
         filterChain.doFilter(request, response);
+    }
+
+    private void handleAccessDeniedException(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AccessDeniedException accessDeniedException) {
+        log.error("Access Denied: {}", accessDeniedException.getMessage());
+        handlerExceptionResolver.resolveException(
+                request, response, null,
+                new CustomAccessDeniedException("Token is invalid/blacklisted!", accessDeniedException)
+        );
     }
 }
