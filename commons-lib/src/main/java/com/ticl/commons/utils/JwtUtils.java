@@ -2,8 +2,10 @@ package com.ticl.commons.utils;
 
 import com.ticl.commons.entity.User;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -43,22 +45,28 @@ public class JwtUtils {
                 .getSubject();
     }
 
-    public Date extractExpiration(String token) {
+    public Date extractExpiration(String token) throws JwtException {
 
-        return Jwts.parser()
-                .verifyWith(
-                        Keys.hmacShaKeyFor(SECRET.getBytes())
-                )
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration();
+        try {
+            return Jwts.parser()
+                    .verifyWith(
+                            Keys.hmacShaKeyFor(SECRET.getBytes())
+                    )
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getExpiration();
+        } catch (SignatureException ex) {
+            throw new JwtException("Invalid signature in the JWT token");
+        } catch (JwtException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean isTokenValid(String token) {
         try {
             return !extractExpiration(token).before(new Date());
-        } catch (ExpiredJwtException e) {
+        } catch (JwtException e) {
             return false;
         }
     }

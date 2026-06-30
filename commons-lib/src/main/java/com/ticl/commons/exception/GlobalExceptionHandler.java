@@ -2,6 +2,8 @@ package com.ticl.commons.exception;
 
 import com.ticl.commons.dto.ErrorResponse;
 import com.ticl.commons.exception.customExceptions.BusinessException;
+import com.ticl.commons.exception.customExceptions.CustomAccessDeniedException;
+import com.ticl.commons.exception.customExceptions.CustomAccessDeniedHandler;
 import com.ticl.commons.exception.customExceptions.UsernameNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
@@ -103,9 +105,9 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler(CustomAccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(
-            AccessDeniedException ex,
+            CustomAccessDeniedException ex,
             HttpServletRequest request
     ) {
         ErrorResponse response = ErrorResponse.builder()

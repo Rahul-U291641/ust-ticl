@@ -1,6 +1,7 @@
 package com.ticl.commons.security;
 
 import com.ticl.commons.exception.customExceptions.BusinessException;
+import com.ticl.commons.exception.customExceptions.CustomAccessDeniedException;
 import com.ticl.commons.repository.BlacklistedTokenRepository;
 import com.ticl.commons.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
@@ -74,7 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
                 """);
 
-                throw new AccessDeniedException("Token is invalid or expired!");
+                throw new CustomAccessDeniedException("Token is invalid or expired!");
         }
 
         String username = jwtUtils.extractUsername(token);

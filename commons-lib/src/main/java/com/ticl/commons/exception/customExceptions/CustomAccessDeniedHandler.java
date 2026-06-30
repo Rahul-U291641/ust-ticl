@@ -29,6 +29,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                 }
                 """);
         log.error("Access Denied: {}", accessDeniedException.getMessage());
-        throw new AccessDeniedException("Access Denied!");
+        throw new CustomAccessDeniedException("Access Denied!");
     }
 }
