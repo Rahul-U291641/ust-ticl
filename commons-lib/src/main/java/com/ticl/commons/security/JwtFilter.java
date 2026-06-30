@@ -61,10 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // Checking token is blacklisted or not before validating it
         if (blacklistedTokenRepository.existsByToken(token)) {
             log.error("JWT token is blacklisted!");
-            handlerExceptionResolver.resolveException(
-                    request, response, null,
-                    new BusinessException("Token is blacklisted!")
-            );
+            this.handleAccessDeniedException(request, response, new AccessDeniedException("Token is not Blacklisted!"));
             return; // stop filter chain
         } else {
             try {
