@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
@@ -32,6 +34,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     BlacklistedTokenRepository blacklistedTokenRepository;
+
+    @Autowired
+    @Qualifier("handlerExceptionResolver")  // picks the composite resolver that knows about @ControllerAdvice
+    HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
     protected void doFilterInternal(
@@ -51,31 +57,22 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
         log.info("Extracted JWT token from Header!");
+
         // Checking token is blacklisted or not before validating it
         if (blacklistedTokenRepository.existsByToken(token)) {
             log.error("JWT token is blacklisted!");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("""
-            {
-              "status":401,
-              "message":"User may logged out or Token has been revoked/blacklisted"
-            }
-            """);
-
-            throw new BusinessException("Token is blacklisted!");
+            handlerExceptionResolver.resolveException(
+                    request, response, null,
+                    new BusinessException("Token is blacklisted!")
+            );
+            return; // stop filter chain
         } else if (!jwtUtils.isTokenValid(token)) {
-                log.error("JWT token is invalid!");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("""
-                {
-                  "status":401,
-                  "message":"Invalid or expired token!"
-                }
-                """);
-
-                throw new CustomAccessDeniedException("Token is invalid or expired!");
+            log.error("JWT token is invalid!");
+            handlerExceptionResolver.resolveException(
+                    request, response, null,
+                    new CustomAccessDeniedException("Token is invalid or expired!")
+            );
+            return; // stop filter chain
         }
 
         String username = jwtUtils.extractUsername(token);
