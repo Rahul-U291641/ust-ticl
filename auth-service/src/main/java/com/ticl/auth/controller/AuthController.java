@@ -4,6 +4,7 @@ import com.ticl.auth.dto.LoginRequest;
 import com.ticl.auth.dto.LoginResponse;
 import com.ticl.auth.service.AuthService;
 import com.ticl.commons.dto.ApiResponse;
+import com.ticl.auth.dto.ValidateTokenResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,12 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse> getLoggedInUser(){
         return ResponseEntity.ok(authService.getLoggedInUser());
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<ValidateTokenResponse> validate(HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        return ResponseEntity.ok(authService.validateToken(token));
     }
 
     @PostMapping("/logout")

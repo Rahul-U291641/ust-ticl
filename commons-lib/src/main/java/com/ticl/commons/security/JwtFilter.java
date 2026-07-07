@@ -50,9 +50,9 @@ public class JwtFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.error("Skipped JWT verification as token is empty/not found!");
+            log.warn("Skipped JWT verification as token is empty/not found!");
             filterChain.doFilter(request, response);
-            throw new BusinessException("Authorization header is missing or invalid!");
+            return;
         }
 
         String token = authHeader.substring(7);

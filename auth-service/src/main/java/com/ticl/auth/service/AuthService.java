@@ -1,5 +1,6 @@
 package com.ticl.auth.service;
 
+import com.ticl.auth.dto.ValidateTokenResponse;
 import com.ticl.auth.dto.LoginRequest;
 import com.ticl.auth.dto.LoginResponse;
 import com.ticl.auth.dto.UserInfoResponse;
@@ -37,6 +38,26 @@ public class AuthService {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    public ValidateTokenResponse validateToken(String token) {
+        if (blacklistedTokenRepository.existsByToken(token)) {
+            throw new BadCredentialsException("Token is blacklisted");
+        }
+        try {
+            if (!jwtUtils.isTokenValid(token)) {
+                throw new BadCredentialsException("Token is invalid or expired");
+            }
+        } catch (Exception e) {
+            throw new BadCredentialsException("Token is invalid or expired");
+        }
+        String username = jwtUtils.extractUsername(token);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return ValidateTokenResponse.builder()
+                .username(user.getUsername())
+                .role(user.getRole().name())
+                .build();
+    }
 
     public LoginResponse login(LoginRequest request) {
 
