@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+
+server:
+  port: 8080
+
+auth:
+  service:
+    url: http://localhost:8081
+
+security:
+  public-urls:
+    - /auth/**
+    - /swagger-ui/**
+    - /v3/api-docs/**
+
+logging:
+  level:
+    root: INFO
+    com.ticl: DEBUG
+    org.springframework.cloud.gateway: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway,health
+  endpoint:
+    gateway:
+      enabled: true
