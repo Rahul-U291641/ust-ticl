@@ -7,7 +7,7 @@ spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/inventory-mgmt
+    url: jdbc:postgresql://localhost:5432/order-mgmt
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
