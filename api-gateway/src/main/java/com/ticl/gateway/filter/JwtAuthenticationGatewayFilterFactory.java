@@ -1,5 +1,6 @@
 package com.ticl.gateway.filter;
 
+import jakarta.annotation.PostConstruct;
 import com.ticl.gateway.config.SecurityProperties;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.net.URI;
 
 @Component
 @Log4j2
@@ -26,6 +29,18 @@ public class JwtAuthenticationGatewayFilterFactory extends AbstractGatewayFilter
     private SecurityProperties securityProperties;
 
     private final WebClient webClient = WebClient.create();
+
+    @PostConstruct
+    public void validateConfig() {
+        try {
+            URI uri = URI.create(authServiceUrl);
+            if (uri.getScheme() == null || uri.getHost() == null) {
+                throw new IllegalStateException("Invalid auth.service.url: " + authServiceUrl);
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Invalid auth.service.url: " + authServiceUrl, e);
+        }
+    }
 
     public JwtAuthenticationGatewayFilterFactory() {
         super(Config.class);

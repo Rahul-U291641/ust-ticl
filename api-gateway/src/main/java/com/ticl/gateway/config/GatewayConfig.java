@@ -37,7 +37,6 @@ public class GatewayConfig {
                 .route("inventory-service", r -> r
                         .path("/inventory/**")
                         .filters(f -> f
-                                .stripPrefix(1)
                                 .filter(jwtAuthenticationGatewayFilterFactory.apply(new JwtAuthenticationGatewayFilterFactory.Config())))
                         .uri(routeProperties.getInventoryServiceUrl()))
                 .route("alert-service", r -> r

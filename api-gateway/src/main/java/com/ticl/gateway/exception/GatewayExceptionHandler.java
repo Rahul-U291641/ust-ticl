@@ -1,6 +1,7 @@
 package com.ticl.gateway.exception;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.webflux.error.ErrorWebExceptionHandler;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -19,6 +20,12 @@ import java.time.LocalDateTime;
 @Log4j2
 public class GatewayExceptionHandler implements ErrorWebExceptionHandler {
 
+    @Value("${gateway.exception-handler.order:-2}")
+    private int order;
+
+    @Value("${gateway.exception-handler.fallback-error-code:GATEWAY_ERROR}")
+    private String fallbackErrorCode;
+
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         HttpStatus status;
@@ -31,7 +38,7 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler {
             message = rse.getReason() != null ? rse.getReason() : ex.getMessage();
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-            error = "GATEWAY_ERROR";
+            error = fallbackErrorCode;
             message = ex.getMessage();
             log.error("Gateway error: {}", ex.getMessage(), ex);
         }

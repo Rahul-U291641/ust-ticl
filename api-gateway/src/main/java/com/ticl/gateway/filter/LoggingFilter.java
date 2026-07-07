@@ -1,6 +1,7 @@
 package com.ticl.gateway.filter;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -13,6 +14,9 @@ import java.time.LocalDateTime;
 @Component
 @Log4j2
 public class LoggingFilter implements GlobalFilter, Ordered {
+
+    @Value("${gateway.logging-filter.order:-1}")
+    private int filterOrder;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -38,6 +42,6 @@ public class LoggingFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return -1;
+        return filterOrder;
     }
 }

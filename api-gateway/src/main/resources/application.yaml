@@ -10,22 +10,23 @@ spring:
 server:
   port: 8080
 
-auth:
-  service:
-    url: http://localhost:8081
-    validate-path: /auth/validate
-
 routes:
   auth-service-url: http://localhost:8081
   order-service-url: http://localhost:8083
   inventory-service-url: http://localhost:8084
   alert-service-url: http://localhost:8085
 
+auth:
+  service:
+    url: ${routes.auth-service-url}
+    validate-path: /auth/validate
+
 security:
   public-urls:
     - /auth/**
     - /swagger-ui/**
     - /v3/api-docs/**
+    - /health
 
 cors:
   allowed-origins:
@@ -41,6 +42,13 @@ cors:
     - "*"
   max-age: 3600
   allow-credentials: false
+
+gateway:
+  exception-handler:
+    order: -2
+    fallback-error-code: GATEWAY_ERROR
+  logging-filter:
+    order: -1
 
 logging:
   level:
