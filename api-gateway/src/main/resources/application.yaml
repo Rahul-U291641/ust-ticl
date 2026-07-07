@@ -13,12 +13,34 @@ server:
 auth:
   service:
     url: http://localhost:8081
+    validate-path: /auth/validate
+
+routes:
+  auth-service-url: http://localhost:8081
+  order-service-url: http://localhost:8083
+  inventory-service-url: http://localhost:8084
+  alert-service-url: http://localhost:8085
 
 security:
   public-urls:
     - /auth/**
     - /swagger-ui/**
     - /v3/api-docs/**
+
+cors:
+  allowed-origins:
+    - "*"
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - PATCH
+    - OPTIONS
+  allowed-headers:
+    - "*"
+  max-age: 3600
+  allow-credentials: false
 
 logging:
   level:

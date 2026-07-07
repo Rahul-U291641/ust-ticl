@@ -19,6 +19,9 @@ public class JwtAuthenticationGatewayFilterFactory extends AbstractGatewayFilter
     @Value("${auth.service.url}")
     private String authServiceUrl;
 
+    @Value("${auth.service.validate-path}")
+    private String authValidatePath;
+
     @Autowired
     private SecurityProperties securityProperties;
 
@@ -47,7 +50,7 @@ public class JwtAuthenticationGatewayFilterFactory extends AbstractGatewayFilter
             }
 
             return webClient.get()
-                    .uri(authServiceUrl + "/auth/validate")
+                    .uri(authServiceUrl + authValidatePath)
                     .header(HttpHeaders.AUTHORIZATION, authHeader)
                     .retrieve()
                     .bodyToMono(ValidateTokenResponse.class)

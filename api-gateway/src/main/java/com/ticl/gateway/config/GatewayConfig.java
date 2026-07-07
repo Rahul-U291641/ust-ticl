@@ -10,49 +10,53 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-
 @Configuration
 public class GatewayConfig {
 
     @Autowired
     private JwtAuthenticationGatewayFilterFactory jwtAuthenticationGatewayFilterFactory;
 
+    @Autowired
+    private RouteProperties routeProperties;
+
+    @Autowired
+    private CorsProperties corsProperties;
+
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("auth-service", r -> r
                         .path("/auth/**")
-                        .uri("http://localhost:8081"))
+                        .uri(routeProperties.getAuthServiceUrl()))
                 .route("order-service", r -> r
                         .path("/orders/**")
                         .filters(f -> f
                                 .stripPrefix(1)
                                 .filter(jwtAuthenticationGatewayFilterFactory.apply(new JwtAuthenticationGatewayFilterFactory.Config())))
-                        .uri("http://localhost:8083"))
+                        .uri(routeProperties.getOrderServiceUrl()))
                 .route("inventory-service", r -> r
                         .path("/inventory/**")
                         .filters(f -> f
                                 .stripPrefix(1)
                                 .filter(jwtAuthenticationGatewayFilterFactory.apply(new JwtAuthenticationGatewayFilterFactory.Config())))
-                        .uri("http://localhost:8084"))
+                        .uri(routeProperties.getInventoryServiceUrl()))
                 .route("alert-service", r -> r
                         .path("/alerts/**")
                         .filters(f -> f
                                 .stripPrefix(1)
                                 .filter(jwtAuthenticationGatewayFilterFactory.apply(new JwtAuthenticationGatewayFilterFactory.Config())))
-                        .uri("http://localhost:8085"))
+                        .uri(routeProperties.getAlertServiceUrl()))
                 .build();
     }
 
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList("*"));
-        corsConfig.setMaxAge(3600L);
-        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        corsConfig.setAllowedHeaders(Arrays.asList("*"));
-        corsConfig.setAllowCredentials(false);
+        corsConfig.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        corsConfig.setMaxAge(corsProperties.getMaxAge());
+        corsConfig.setAllowedMethods(corsProperties.getAllowedMethods());
+        corsConfig.setAllowedHeaders(corsProperties.getAllowedHeaders());
+        corsConfig.setAllowCredentials(corsProperties.isAllowCredentials());
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
