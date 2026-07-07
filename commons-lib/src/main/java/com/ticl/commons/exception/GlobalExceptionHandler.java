@@ -3,14 +3,11 @@ package com.ticl.commons.exception;
 import com.ticl.commons.dto.ErrorResponse;
 import com.ticl.commons.exception.customExceptions.BusinessException;
 import com.ticl.commons.exception.customExceptions.CustomAccessDeniedException;
-import com.ticl.commons.exception.customExceptions.CustomAccessDeniedHandler;
 import com.ticl.commons.exception.customExceptions.UsernameNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
-import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,23 +60,6 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error("Internal Server Error!")
-                .message(ex.getMessage())
-                .path(request.getRequestURI())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(response);
-    }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
-            BusinessException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse response = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND.value())
-                .error("Resource not found!")
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();

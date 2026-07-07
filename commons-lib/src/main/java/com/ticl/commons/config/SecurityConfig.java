@@ -117,7 +117,7 @@ public class SecurityConfig {
                     .build();
 
             User manager = User.builder()
-                    .username("inventory.manager")
+                    .username("manager")
                     .password(passwordEncoder.encode("Manager@123"))
                     .role(Role.INVENTORY_MANAGER)
                     .status("ACTIVE")
