@@ -31,18 +31,19 @@ public class GatewayConfig {
                 .route("order-service", r -> r
                         .path("/orders/**")
                         .filters(f -> f
-                                .stripPrefix(1)
+                                .stripPrefix(2)
                                 .filter(jwtAuthenticationGatewayFilterFactory.apply(new JwtAuthenticationGatewayFilterFactory.Config())))
                         .uri(routeProperties.getOrderServiceUrl()))
                 .route("inventory-service", r -> r
-                        .path("/inventory/**")
+                        .path("/api/v1/inventory/**")
                         .filters(f -> f
+                                .stripPrefix(2)
                                 .filter(jwtAuthenticationGatewayFilterFactory.apply(new JwtAuthenticationGatewayFilterFactory.Config())))
                         .uri(routeProperties.getInventoryServiceUrl()))
                 .route("alert-service", r -> r
                         .path("/alerts/**")
                         .filters(f -> f
-                                .stripPrefix(1)
+                                .stripPrefix(2)
                                 .filter(jwtAuthenticationGatewayFilterFactory.apply(new JwtAuthenticationGatewayFilterFactory.Config())))
                         .uri(routeProperties.getAlertServiceUrl()))
                 .build();
