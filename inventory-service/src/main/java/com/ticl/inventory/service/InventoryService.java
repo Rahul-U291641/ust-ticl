@@ -65,8 +65,12 @@ public class InventoryService {
     }
 
     public InventoryResponse getById(UUID id) {
-        InventoryItem inventoryItem = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Inventory item not found for requested ID : " + id));
-        return mapToResponse(inventoryItem);
+        try {
+            InventoryItem inventoryItem = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Inventory item not found for requested ID : " + id));
+            return mapToResponse(inventoryItem);
+        } catch (ResourceNotFoundException e) {
+            throw new BusinessException("Failed to get inventory item for : " + id + " with cause : " + e.getMessage());
+        }
     }
 
     public void update(UUID id, @Valid InventoryRequest request) {
