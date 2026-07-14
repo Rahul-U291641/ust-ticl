@@ -16,7 +16,3 @@ spring:
   sql:
     init:
       mode: always
-# JWT Configurations
-jwt:
-  secret: mySuperSecretKeymySuperSecretKeymySuperSecretKey
-  expiration: 3600000

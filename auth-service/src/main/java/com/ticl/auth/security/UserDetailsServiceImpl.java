@@ -1,7 +1,7 @@
-package com.ticl.commons.security;
+package com.ticl.auth.security;
 
-import com.ticl.commons.entity.User;
-import com.ticl.commons.repository.UserRepository;
+import com.ticl.auth.entity.User;
+import com.ticl.auth.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

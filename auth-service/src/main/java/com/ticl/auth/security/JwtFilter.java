@@ -1,9 +1,8 @@
-package com.ticl.commons.security;
+package com.ticl.auth.security;
 
-import com.ticl.commons.exception.customExceptions.BusinessException;
+import com.ticl.auth.repository.BlacklistedTokenRepository;
+import com.ticl.auth.utils.JwtUtils;
 import com.ticl.commons.exception.customExceptions.CustomAccessDeniedException;
-import com.ticl.commons.repository.BlacklistedTokenRepository;
-import com.ticl.commons.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

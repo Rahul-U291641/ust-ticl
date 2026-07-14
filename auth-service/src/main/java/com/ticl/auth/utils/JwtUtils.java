@@ -1,7 +1,6 @@
-package com.ticl.commons.utils;
+package com.ticl.auth.utils;
 
-import com.ticl.commons.entity.User;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.ticl.auth.entity.User;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

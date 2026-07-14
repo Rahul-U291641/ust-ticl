@@ -1,4 +1,4 @@
-package com.ticl.commons.security;
+package com.ticl.auth.security;
 
 import lombok.Getter;
 import lombok.Setter;

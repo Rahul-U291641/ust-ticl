@@ -1,5 +1,6 @@
-package com.ticl.commons.entity;
+package com.ticl.auth.entity;
 
+import com.ticl.commons.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

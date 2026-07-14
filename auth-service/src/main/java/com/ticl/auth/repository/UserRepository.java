@@ -1,6 +1,6 @@
-package com.ticl.commons.repository;
+package com.ticl.auth.repository;
 
-import com.ticl.commons.entity.User;
+import com.ticl.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,5 +1,6 @@
-package com.ticl.commons.entity;
+package com.ticl.auth.entity;
 
+import com.ticl.commons.entity.BaseEntity;
 import com.ticl.commons.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;

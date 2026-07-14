@@ -1,6 +1,6 @@
-package com.ticl.commons.scheduler;
+package com.ticl.auth.scheduler;
 
-import com.ticl.commons.repository.BlacklistedTokenRepository;
+import com.ticl.auth.repository.BlacklistedTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
