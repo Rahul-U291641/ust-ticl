@@ -6,10 +6,12 @@ import com.ticl.auth.dto.LoginResponse;
 import com.ticl.auth.dto.UserInfoResponse;
 import com.ticl.auth.entity.BlacklistedToken;
 import com.ticl.auth.entity.User;
+import com.ticl.auth.producer.AuthEventProducer;
 import com.ticl.auth.repository.BlacklistedTokenRepository;
 import com.ticl.auth.repository.UserRepository;
 import com.ticl.auth.utils.JwtUtils;
 import com.ticl.commons.dto.ApiResponse;
+import com.ticl.commons.enums.EventType;
 import com.ticl.commons.exception.customExceptions.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,6 +40,9 @@ public class AuthService {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    AuthEventProducer authEventProducer;
 
     public ValidateTokenResponse validateToken(String token) {
         if (blacklistedTokenRepository.existsByToken(token)) {
@@ -70,6 +75,7 @@ public class AuthService {
             );
             User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
             String token = jwtUtils.generateToken(user);
+            authEventProducer.publishUserAuthEvent(user, EventType.USER_LOGGED_IN);
             return LoginResponse.builder()
                     .token(token)
                     .username(user.getUsername())
@@ -94,6 +100,9 @@ public class AuthService {
     }
 
     public void logout(String token) {
+        String username = jwtUtils.extractUsername(token);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Date expiryDate = jwtUtils.extractExpiration(token);
         BlacklistedToken blacklistedToken = BlacklistedToken.builder()
@@ -108,5 +117,6 @@ public class AuthService {
                 .build();
 
         blacklistedTokenRepository.save(blacklistedToken);
+        authEventProducer.publishUserAuthEvent(user, EventType.USER_LOGGED_OUT);
     }
 }

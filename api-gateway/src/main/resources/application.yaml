@@ -23,7 +23,7 @@ auth:
 
 security:
   public-urls:
-    - /auth/**
+    - /auth/login
     - /swagger-ui/**
     - /v3/api-docs/**
     - /health

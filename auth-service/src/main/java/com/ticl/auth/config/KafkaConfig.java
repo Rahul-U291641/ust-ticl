@@ -1,4 +1,4 @@
-package com.ticl.inventory.config;
+package com.ticl.auth.config;
 
 import com.ticl.commons.constant.KafkaTopics;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -11,9 +11,18 @@ public class KafkaConfig {
 
     // Registering Kafka Topic with 3 partitions and 1 replica
     @Bean
-    public NewTopic AuditEventTopic(){
+    public NewTopic UserLogin(){
         return TopicBuilder
-                .name(KafkaTopics.AUDIT_EVENTS)
+                .name(KafkaTopics.USER_LOGIN)
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic UserLogout(){
+        return TopicBuilder
+                .name(KafkaTopics.USER_LOGOUT)
                 .partitions(3)
                 .replicas(1)
                 .build();

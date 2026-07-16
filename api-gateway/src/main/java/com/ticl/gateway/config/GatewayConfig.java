@@ -27,6 +27,8 @@ public class GatewayConfig {
         return builder.routes()
                 .route("auth-service", r -> r
                         .path("/auth/**")
+                        .filters(f -> f
+                                .filter(jwtAuthenticationGatewayFilterFactory.apply(new JwtAuthenticationGatewayFilterFactory.Config())))
                         .uri(routeProperties.getAuthServiceUrl()))
                 .route("order-service", r -> r
                         .path("/api/v1/orders", "/api/v1/orders/**")

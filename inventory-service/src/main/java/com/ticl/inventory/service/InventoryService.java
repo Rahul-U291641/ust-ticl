@@ -1,7 +1,7 @@
 package com.ticl.inventory.service;
 
+import com.ticl.commons.enums.EventType;
 import com.ticl.commons.exception.customExceptions.BusinessException;
-import com.ticl.inventory.dto.EventType;
 import com.ticl.inventory.dto.InventoryRequest;
 import com.ticl.inventory.dto.InventoryResponse;
 import com.ticl.inventory.entity.InventoryItem;
@@ -86,7 +86,7 @@ public class InventoryService {
             inventoryItem.setUpdatedAt(LocalDateTime.now());
 
             repository.save(inventoryItem);
-            //FIXME:: producer.publishInventoryEvent(inventoryItem, EventType.INVENTORY_UPDATED);
+            producer.publishInventoryEvent(inventoryItem, EventType.INVENTORY_UPDATED);
         } catch (Exception ex) {
             throw new BusinessException("Failed to update inventory item for : " + id + " with cause : " + ex.getMessage());
         }
@@ -96,7 +96,7 @@ public class InventoryService {
         try {
             InventoryItem inventoryItem = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The item not found for requested ID : " + id));
             repository.deleteById(id);
-            //FIXME:: producer.publishInventoryEvent(inventoryItem, EventType.INVENTORY_UPDATED);
+            producer.publishInventoryEvent(inventoryItem, EventType.INVENTORY_DELETED);
         } catch (Exception ex) {
             throw new BusinessException("Failed to delete inventory item for : " + id + " with cause : " + ex.getMessage());
         }
